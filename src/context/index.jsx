@@ -6,6 +6,7 @@ export const ShoppingContext = createContext(null);
 const ShoppingProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [productList, setProductList] = useState([]);
+  const [productDetails, setProductDetails] = useState(null);
 
   const fetchProducts = async () => {
     const productApi = await fetch('https://dummyjson.com/products');
@@ -22,7 +23,9 @@ const ShoppingProvider = ({ children }) => {
   }, []);
 
   return (
-    <ShoppingContext.Provider value={{ productList, loading }}>
+    <ShoppingContext.Provider
+      value={{ productList, loading, setLoading, productDetails, setProductDetails }}
+    >
       {children}
     </ShoppingContext.Provider>
   );
