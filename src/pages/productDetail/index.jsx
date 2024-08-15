@@ -5,8 +5,13 @@ import { ShoppingContext } from '../../context';
 function ProductDetail() {
   const { id } = useParams();
 
-  const { productDetails, setProductDetails, loading, setLoading } =
-    useContext(ShoppingContext);
+  const {
+    productDetails,
+    setProductDetails,
+    loading,
+    setLoading,
+    handleAddToCart,
+  } = useContext(ShoppingContext);
 
   async function fetchProductDetail() {
     const apiResponse = await fetch(`https://dummyjson.com/products/${id}`);
@@ -20,6 +25,7 @@ function ProductDetail() {
 
   useEffect(() => {
     fetchProductDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   if (loading) return <h1>Product details loading! Please Wait</h1>;
@@ -38,17 +44,15 @@ function ProductDetail() {
             </div>
             <div className="mt-6 flex flex-wrap justify-center gap-6 mx-auto">
               {productDetails?.images?.length
-                ? productDetails?.images?.map((image) => {
-                    return (
-                      <div className="rounded-xl p-4 shadow-md" key={image}>
-                        <img
-                          className="w-24 cursor-pointer"
-                          src={image}
-                          alt="Product Image"
-                        />
-                      </div>
-                    );
-                  })
+                ? productDetails?.images?.map((image) => (
+                    <div className="rounded-xl p-4 shadow-md" key={image}>
+                      <img
+                        className="w-24 cursor-pointer"
+                        src={image}
+                        alt="Product Image"
+                      />
+                    </div>
+                  ))
                 : null}
             </div>
           </div>
@@ -60,7 +64,10 @@ function ProductDetail() {
               <p className="text-xl font-bold">${productDetails?.price}</p>
             </div>
             <div>
-              <button className=" mt-5 min-w-[200px] px-4 py-3 border-[#333] bg-transparent text-sm font-semibold rounded">
+              <button
+                onClick={() => handleAddToCart(productDetails)}
+                className=" mt-5 min-w-[200px] px-4 py-3 border-[#333] bg-transparent text-sm font-semibold rounded"
+              >
                 Add to cart
               </button>
             </div>
