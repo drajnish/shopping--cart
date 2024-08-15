@@ -36,7 +36,6 @@ const ShoppingProvider = ({ children }) => {
         totalPrice: getProductDetail?.price,
       });
     } else {
-      console.log('working on it');
       cpyCurrentCartItems[findIndexOfCurrentItem] = {
         ...cpyCurrentCartItems[findIndexOfCurrentItem],
         quantity: cpyCurrentCartItems[findIndexOfCurrentItem].quantity + 1,
@@ -50,6 +49,29 @@ const ShoppingProvider = ({ children }) => {
     localStorage.setItem('cartItems', JSON.stringify(cpyCurrentCartItems));
     navigate('/cart');
   };
+
+  function handleRemoveFromCart(getProductDetail, isFullyRemove) {
+    let cpyExistingCartItems = [...cartItems];
+    const findIndexOfExistingCartItem = cpyExistingCartItems.findIndex(
+      (cartItem) => cartItem.id === getProductDetail?.id
+    );
+
+    if (isFullyRemove) {
+      cpyExistingCartItems.splice(findIndexOfExistingCartItem, 1);
+    } else {
+      cpyExistingCartItems[findIndexOfExistingCartItem] = {
+        ...cpyExistingCartItems[findIndexOfExistingCartItem],
+        quantity:
+          cpyExistingCartItems[findIndexOfExistingCartItem].quantity - 1,
+        totalPrice:
+          cpyExistingCartItems[findIndexOfExistingCartItem].price *
+          (cpyExistingCartItems[findIndexOfExistingCartItem].quantity - 1),
+      };
+    }
+
+    localStorage.setItem('cartItems', JSON.stringify(cpyExistingCartItems));
+    setCartItems(cpyExistingCartItems);
+  }
 
   useEffect(() => {
     fetchProducts();
@@ -67,6 +89,7 @@ const ShoppingProvider = ({ children }) => {
         setProductDetails,
         handleAddToCart,
         cartItems,
+        handleRemoveFromCart,
       }}
     >
       {children}

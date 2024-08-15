@@ -1,5 +1,10 @@
+import { useContext } from 'react';
+import { ShoppingContext } from '../../context';
+
 /* eslint-disable react/prop-types */
 function CartTile({ singleCartItem }) {
+  const { handleRemoveFromCart, handleAddToCart } = useContext(ShoppingContext);
+
   return (
     <>
       <div className="grid grid-cols-3 items-start gap-5">
@@ -15,7 +20,10 @@ function CartTile({ singleCartItem }) {
             <h3 className="text-base font-bold text-gray-900">
               {singleCartItem?.title}
             </h3>
-            <button className="text-sm px-4 py-3 bg-black text-white font-extrabold">
+            <button
+              onClick={() => handleRemoveFromCart(singleCartItem, true)}
+              className="text-sm px-4 py-3 bg-black text-white font-extrabold"
+            >
               Remove
             </button>
           </div>
@@ -24,9 +32,29 @@ function CartTile({ singleCartItem }) {
           <h3 className="text-lg font-bold text-gray-900">
             ₹{singleCartItem?.totalPrice.toFixed(2)}
           </h3>
+          <p className="mt-2 mb-3 font-bold text-[16px]">
+            {' '}
+            Quantity {singleCartItem?.quantity}
+          </p>
           <div className="mt-3">
-            <button className="border border-[#000]">-</button>
-            <button className="border border-[#000]">+</button>
+            <button
+              onClick={() =>
+                handleRemoveFromCart(
+                  singleCartItem,
+                  singleCartItem?.quantity > 1 ? false : true
+                )
+              }
+              className="disabled:opacity-65 border border-[#000]"
+              disabled={singleCartItem?.quantity === 1}
+            >
+              -
+            </button>
+            <button
+              onClick={() => handleAddToCart(singleCartItem)}
+              className="border border-[#000]"
+            >
+              +
+            </button>
           </div>
         </div>
       </div>
